@@ -1,6 +1,6 @@
 # Advanced Computer Systems — Performance Profiling Projects
 
-**ECSE 4320/6320 | Class-wide Projects | October 2026**
+**ECSE 6320 | Class-wide Projects | October 2026**
 
 This repository brings together three experimental studies of computer-system performance, from CPU vector execution to the memory hierarchy and storage I/O. The central goal is to explain *why* performance changes as the workload changes—not simply to report the highest speedup or throughput number. Each project includes benchmark implementations, repeatable experiment scripts, original measurement records, processed results, figures, and a technical report.
 
