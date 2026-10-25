@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "raw_sample_count": 1320,
+  "configuration_count": 440,
+  "paired_scalar_simd_count": 330,
+  "independent_copy_samples": 7,
+  "repetitions_per_configuration": 3,
+  "variants": [
+    "scalar",
+    "auto",
+    "avx2",
+    "avx512"
+  ],
+  "kernels": [
+    "saxpy",
+    "dot",
+    "mul"
+  ],
+  "precisions": [
+    "f32",
+    "f64"
+  ],
+  "figure_count": 9,
+  "sha256_measurements_csv": "c1577b67c0006155f91dd2b61a1e2c5dcf2d49f39eb536e696294ad01ebdf9c6",
+  "sha256_memcpy_bandwidth_csv": "df732bbf5683d2d8f157c3be29843b3d08d7aa944e05cc7c4d015cef6310024d",
+  "hardware_core_cycles_recorded": 0,
+  "measurement_scope": "virtualized_reference_machine_not_student_local_cpu"
+}

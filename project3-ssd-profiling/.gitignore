@@ -1,0 +1,10 @@
+# Never upload transient scratch target files; these can be large and contain benchmark-only data.
+data/scratch/*
+!data/scratch/.gitkeep
+# Rebuildable binaries and Python caches.
+bin/
+__pycache__/
+scripts/__pycache__/
+*.pyc
+# Run-local temporary files.
+*.tmp

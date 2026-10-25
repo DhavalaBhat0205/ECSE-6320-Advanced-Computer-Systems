@@ -1,0 +1,34 @@
+ECSE 4320/6320 — Project 3 native environment validation
+Generated from measured virtualized-development-environment execution.
+No FIO results were collected; installed command is Fiona (Python) rather than Flexible I/O Tester.
+Validation time UTC: 2026-10-25T02:43:06Z
+
+GCC version:
+gcc (Debian 14.2.0-19) 14.2.0
+
+Build flags: -std=c11 -O2 -g -Wall -Wextra -Wconversion -Wshadow -Wpedantic -D_FILE_OFFSET_BITS=64 -pthread -lm
+Extra strict compile: gcc -std=c11 -Wall -Wextra -Werror -Wpedantic -O2 -pthread src/direct_io_bench.c -lm [PASS]
+
+Test suite:
+python3 -m unittest discover -s scripts -p 'test_*.py' -v
+test_aggregate_is_independent_of_run_count (test_project.RepositoryTests.test_aggregate_is_independent_of_run_count) ... ok
+test_fio_command_never_names_a_block_device (test_project.RepositoryTests.test_fio_command_never_names_a_block_device) ... ok
+test_fio_json_lat_ns_conversion (test_project.RepositoryTests.test_fio_json_lat_ns_conversion) ... ok
+test_matrix_has_required_factors (test_project.RepositoryTests.test_matrix_has_required_factors) ... ok
+test_native_parser_with_directional_percentiles (test_project.RepositoryTests.test_native_parser_with_directional_percentiles) ... ok
+test_native_real_direct_io_smoke (test_project.RepositoryTests.test_native_real_direct_io_smoke) ... ok
+test_native_safety_rejects_raw_devices_and_unexpected_file (test_project.RepositoryTests.test_native_safety_rejects_raw_devices_and_unexpected_file) ... ok
+test_parser_refuses_zero_io (test_project.RepositoryTests.test_parser_refuses_zero_io) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.180s
+
+OK
+
+Actual FIO detection:
+/opt/pyvenv/lib/python3.13/site-packages/fiona/_vendor/snuggs.py:180: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+  higher_func = oneOf(" ".join(higher_func_map.keys())).set_parse_action(
+fio, version 1.10.1
+
+Files and original sample counts:
+118

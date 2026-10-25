@@ -1,0 +1,35 @@
+{
+  "engine": "native-posix-sync",
+  "direct": true,
+  "mode": "read",
+  "block_bytes": 131072,
+  "file_bytes": 134217728,
+  "workers": 8,
+  "read_percent": 100,
+  "runtime_s": 0.40111948,
+  "seed": 735890,
+  "read": {
+    "operations": 4297,
+    "bytes": 563216384,
+    "iops": 10712.51898026,
+    "bw_mib_s": 1339.06487253,
+    "mean_us": 744.27610519,
+    "p50_us": 684.43,
+    "p95_us": 1249.837,
+    "p99_us": 1962.93368,
+    "p999_us": 3209.216336,
+    "max_us": 3503.231
+  },
+  "write": {
+    "operations": 0,
+    "bytes": 0,
+    "iops": 0.0,
+    "bw_mib_s": 0.0,
+    "mean_us": 0.0,
+    "p50_us": 0.0,
+    "p95_us": 0.0,
+    "p99_us": 0.0,
+    "p999_us": 0.0,
+    "max_us": 0.0
+  }
+}

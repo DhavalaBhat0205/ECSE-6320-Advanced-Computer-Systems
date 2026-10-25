@@ -1,0 +1,12 @@
+Scalar compiler report interpretation — GCC 14.2.0
+
+The scalar binary was compiled with:
+  -O3 -march=x86-64 -mtune=generic -fno-tree-vectorize -fno-tree-slp-vectorize
+
+With both vectorization passes disabled, GCC emitted an empty
+-fopt-info-vec-all output file. That empty diagnostic file is not a missing
+measurement or a placeholder; the vectorization passes were explicitly off.
+
+The reproducible object-code audit in isa-summary.txt shows packed_arithmetic_insns=0
+for all six scalar kernels. Scalar floating-point opcodes such as mulss and
+mulsd may still reference XMM registers; that is not packed SIMD.

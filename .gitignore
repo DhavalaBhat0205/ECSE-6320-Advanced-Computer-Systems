@@ -1,0 +1,15 @@
+# Local Python caches and isolated environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Temporary benchmark files (retain all recorded raw measurements)
+**/data/scratch/
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+*~
+*.swp

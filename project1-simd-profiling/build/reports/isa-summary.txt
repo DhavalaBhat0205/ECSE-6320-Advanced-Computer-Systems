@@ -1,0 +1,107 @@
+Targeted disassembly evidence; object-level counts include contiguous and strided branches.
+xmm=128-bit, ymm=256-bit, zmm=512-bit register names. Appearance does not prove a particular loop ran.
+Check compiler reports, disassembly control flow, CPU feature flags and benchmark configuration.
+FMA is intentionally disabled via -ffp-contract=off; do not claim fused operations.
+
+OBJECT build/scalar/kernels.o
+  kernel_saxpy_f32: packed_arithmetic_insns=0, register_uses=8, register_widths={'xmm': 8}
+    evidence: movss (%r8,%rax,1),%xmm1
+    evidence: mulss %xmm0,%xmm1
+    evidence: addss (%rdx,%rax,1),%xmm1
+    NO PACKED ARITHMETIC OBSERVED: xmm scalar arithmetic (e.g., mulss/mulsd) is NOT SIMD vectorization
+  kernel_saxpy_f64: packed_arithmetic_insns=0, register_uses=8, register_widths={'xmm': 8}
+    evidence: movsd (%r8,%rax,1),%xmm1
+    evidence: mulsd %xmm0,%xmm1
+    evidence: addsd (%rdx,%rax,1),%xmm1
+    NO PACKED ARITHMETIC OBSERVED: xmm scalar arithmetic (e.g., mulss/mulsd) is NOT SIMD vectorization
+  kernel_dot_f32: packed_arithmetic_insns=0, register_uses=12, register_widths={'xmm': 12}
+    evidence: pxor %xmm1,%xmm1
+    evidence: movss (%rsi,%rax,1),%xmm0
+    evidence: mulss (%rdx,%rax,1),%xmm0
+    NO PACKED ARITHMETIC OBSERVED: xmm scalar arithmetic (e.g., mulss/mulsd) is NOT SIMD vectorization
+  kernel_dot_f64: packed_arithmetic_insns=0, register_uses=12, register_widths={'xmm': 12}
+    evidence: pxor %xmm1,%xmm1
+    evidence: movsd (%rsi,%rax,1),%xmm0
+    evidence: mulsd (%rdx,%rax,1),%xmm0
+    NO PACKED ARITHMETIC OBSERVED: xmm scalar arithmetic (e.g., mulss/mulsd) is NOT SIMD vectorization
+  kernel_mul_f32: packed_arithmetic_insns=0, register_uses=6, register_widths={'xmm': 6}
+    evidence: movss (%r9,%rax,1),%xmm0
+    evidence: mulss (%rdx,%rax,1),%xmm0
+    evidence: movss %xmm0,(%rcx,%rax,1)
+    NO PACKED ARITHMETIC OBSERVED: xmm scalar arithmetic (e.g., mulss/mulsd) is NOT SIMD vectorization
+  kernel_mul_f64: packed_arithmetic_insns=0, register_uses=6, register_widths={'xmm': 6}
+    evidence: movsd (%r9,%rax,1),%xmm0
+    evidence: mulsd (%rdx,%rax,1),%xmm0
+    evidence: movsd %xmm0,(%rcx,%rax,1)
+    NO PACKED ARITHMETIC OBSERVED: xmm scalar arithmetic (e.g., mulss/mulsd) is NOT SIMD vectorization
+
+OBJECT build/auto/kernels.o
+  kernel_saxpy_f32: packed_arithmetic_insns=4, register_uses=21, register_widths={'xmm': 21}
+    evidence: mulps %xmm2,%xmm1
+    evidence: addps %xmm3,%xmm1
+    evidence: mulps %xmm2,%xmm1
+  kernel_saxpy_f64: packed_arithmetic_insns=2, register_uses=14, register_widths={'xmm': 14}
+    evidence: mulpd %xmm2,%xmm1
+    evidence: addpd %xmm3,%xmm1
+  kernel_dot_f32: packed_arithmetic_insns=7, register_uses=61, register_widths={'xmm': 61}
+    evidence: mulps %xmm2,%xmm0
+    evidence: addps %xmm1,%xmm0
+    evidence: addps %xmm1,%xmm0
+  kernel_dot_f64: packed_arithmetic_insns=6, register_uses=30, register_widths={'xmm': 30}
+    evidence: mulpd %xmm1,%xmm0
+    evidence: addpd %xmm0,%xmm2
+    evidence: addpd %xmm2,%xmm0
+  kernel_mul_f32: packed_arithmetic_insns=2, register_uses=14, register_widths={'xmm': 14}
+    evidence: mulps %xmm2,%xmm0
+    evidence: mulps %xmm1,%xmm0
+  kernel_mul_f64: packed_arithmetic_insns=1, register_uses=10, register_widths={'xmm': 10}
+    evidence: mulpd %xmm1,%xmm0
+
+OBJECT build/avx2/kernels.o
+  kernel_saxpy_f32: packed_arithmetic_insns=4, register_uses=20, register_widths={'xmm': 16, 'ymm': 4}
+    evidence: vmulps (%rdi,%rax,1),%ymm2,%ymm1
+    evidence: vaddps (%rdx,%rax,1),%ymm1,%ymm1
+    evidence: vmulps (%rdi,%rax,4),%xmm1,%xmm1
+  kernel_saxpy_f64: packed_arithmetic_insns=4, register_uses=14, register_widths={'xmm': 10, 'ymm': 4}
+    evidence: vmulpd (%r8,%rax,1),%ymm2,%ymm1
+    evidence: vaddpd (%rdx,%rax,1),%ymm1,%ymm1
+    evidence: vmulpd (%r8,%rax,8),%xmm1,%xmm1
+  kernel_dot_f32: packed_arithmetic_insns=12, register_uses=66, register_widths={'xmm': 62, 'ymm': 4}
+    evidence: vmulps %xmm1,%xmm0,%xmm0
+    evidence: vaddps %xmm2,%xmm0,%xmm0
+    evidence: vaddps %xmm0,%xmm2,%xmm0
+  kernel_dot_f64: packed_arithmetic_insns=10, register_uses=35, register_widths={'xmm': 31, 'ymm': 4}
+    evidence: vmulpd %xmm1,%xmm0,%xmm0
+    evidence: vaddpd %xmm0,%xmm2,%xmm2
+    evidence: vaddpd %xmm2,%xmm0,%xmm0
+  kernel_mul_f32: packed_arithmetic_insns=2, register_uses=18, register_widths={'xmm': 15, 'ymm': 3}
+    evidence: vmulps (%rdi,%rax,1),%ymm0,%ymm0
+    evidence: vmulps (%rdi,%rax,4),%xmm0,%xmm0
+  kernel_mul_f64: packed_arithmetic_insns=2, register_uses=12, register_widths={'xmm': 9, 'ymm': 3}
+    evidence: vmulpd (%r9,%rax,1),%ymm0,%ymm0
+    evidence: vmulpd (%r9,%rax,8),%xmm0,%xmm0
+
+OBJECT build/avx512/kernels.o
+  kernel_saxpy_f32: packed_arithmetic_insns=4, register_uses=32, register_widths={'xmm': 24, 'zmm': 4, 'ymm': 4}
+    evidence: vmulps (%rsi,%rax,1),%zmm2,%zmm1
+    evidence: vaddps (%rdx,%rax,1),%zmm1,%zmm1
+    evidence: vmulps (%rsi,%rax,4),%ymm1,%ymm1
+  kernel_saxpy_f64: packed_arithmetic_insns=4, register_uses=20, register_widths={'xmm': 12, 'zmm': 4, 'ymm': 4}
+    evidence: vmulpd (%rsi,%rax,1),%zmm2,%zmm1
+    evidence: vaddpd (%rdx,%rax,1),%zmm1,%zmm1
+    evidence: vmulpd (%rsi,%rax,8),%ymm1,%ymm1
+  kernel_dot_f32: packed_arithmetic_insns=14, register_uses=82, register_widths={'xmm': 72, 'zmm': 4, 'ymm': 6}
+    evidence: vmulps %xmm1,%xmm0,%xmm0
+    evidence: vaddps %xmm2,%xmm0,%xmm0
+    evidence: vaddps %xmm0,%xmm2,%xmm0
+  kernel_dot_f64: packed_arithmetic_insns=12, register_uses=45, register_widths={'xmm': 35, 'zmm': 4, 'ymm': 6}
+    evidence: vmulpd %xmm1,%xmm0,%xmm0
+    evidence: vaddpd %xmm0,%xmm2,%xmm2
+    evidence: vaddpd %xmm2,%xmm0,%xmm0
+  kernel_mul_f32: packed_arithmetic_insns=2, register_uses=30, register_widths={'xmm': 24, 'zmm': 3, 'ymm': 3}
+    evidence: vmulps (%rsi,%rax,1),%zmm0,%zmm0
+    evidence: vmulps (%rsi,%rax,4),%ymm0,%ymm0
+  kernel_mul_f64: packed_arithmetic_insns=2, register_uses=18, register_widths={'xmm': 12, 'zmm': 3, 'ymm': 3}
+    evidence: vmulpd (%rsi,%rax,1),%zmm0,%zmm0
+    evidence: vmulpd (%rsi,%rax,8),%ymm0,%ymm0
+

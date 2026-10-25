@@ -1,0 +1,18 @@
+UTC timestamp: 2026-10-25T01:56:31Z
+Kernel: Linux 2dabf30c9855 6.18.55 #1 SMP Wed Oct 14 19:45:18 UTC 2026 x86_64 GNU/Linux
+Compiler: 14.2.0
+Python: Python 3.13.5
+CPU model:  INTEL(R) XEON(R) PLATINUM 8573C
+Allowed affinity: pid 1188's current affinity list: 0-4
+SMT status: 0
+CPU governor(s): 
+Cache hierarchy: 
+  1 Data 48K
+  1 Instruction 32K
+  2 Unified 2048K
+  3 Unified 266240K
+Memory: MemTotal:        6090680 kB
+Transparent hugepages: always [madvise] never
+perf executable: unavailable
+perf_event_paranoid: 2
+BENCH_CPU: unbound

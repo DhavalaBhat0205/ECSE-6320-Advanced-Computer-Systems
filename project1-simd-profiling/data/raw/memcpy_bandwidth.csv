@@ -1,0 +1,8 @@
+trial,buffer_mib,total_two_buffer_mib,useful_traffic_bytes,seconds,useful_gib_per_s,scope
+0,192,384,402653184,0.025602525,14.646992826,libc_memmove_two_warmed_buffers_not_IMC_bytes
+1,192,384,402653184,0.026168772,14.330057215,libc_memmove_two_warmed_buffers_not_IMC_bytes
+2,192,384,402653184,0.024454410,15.334657430,libc_memmove_two_warmed_buffers_not_IMC_bytes
+3,192,384,402653184,0.027007370,13.885098771,libc_memmove_two_warmed_buffers_not_IMC_bytes
+4,192,384,402653184,0.024277453,15.446430892,libc_memmove_two_warmed_buffers_not_IMC_bytes
+5,192,384,402653184,0.025088496,14.947089694,libc_memmove_two_warmed_buffers_not_IMC_bytes
+6,192,384,402653184,0.031958290,11.734044594,libc_memmove_two_warmed_buffers_not_IMC_bytes

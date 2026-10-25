@@ -1,0 +1,11 @@
+{
+  "runs": [
+    "20261025T023241Z-ec1551",
+    "20261025T023432Z-followup-0156e0"
+  ],
+  "raw_samples": 118,
+  "configurations": 59,
+  "fio_samples": 0,
+  "native_samples": 118,
+  "aggregation": "median of per-run metrics, with across-run sample standard deviation; not pooled latency percentiles"
+}

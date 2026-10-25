@@ -1,0 +1,73 @@
+COMMAND: make test
+python3 -m unittest discover -s tests -v
+test_csv_duplicate_repetition_is_rejected (test_parsers.ParserContractTests.test_csv_duplicate_repetition_is_rejected) ... ok
+test_process_scope_for_perf_csv (test_parsers.ParserContractTests.test_process_scope_for_perf_csv) ... ok
+test_speedup_pairs_require_matching_configuration (test_parsers.ParserContractTests.test_speedup_pairs_require_matching_configuration) ... ok
+test_supported_and_missing_counters (test_parsers.ParserContractTests.test_supported_and_missing_counters) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.005s
+
+OK
+bash scripts/self_test.sh
+Validation-only suite passed: scalar
+Validation-only suite passed: auto
+Validation-only suite passed: avx2
+Validation-only suite passed: avx512
+COMMAND: make sanitize
+gcc -std=c11 -O1 -g -Wall -Wextra -Wpedantic -fno-omit-frame-pointer -fsanitize=address,undefined -fno-math-errno -fno-trapping-math -fno-signed-zeros -fassociative-math -ffp-contract=off -march=x86-64 -mtune=generic -fno-tree-vectorize -fno-tree-slp-vectorize -DBUILD_LABEL=\"sanitizer\" src/kernels.c src/main.c -o build/sanitized-benchmark -lm
+ASAN_OPTIONS=detect_leaks=1 build/sanitized-benchmark --sizes 1,3,7,8,9,17,64,257,1025 --dtype both --kernel all --stride 8 --offset-elements 3 --validate-only --no-perf
+PASS build=sanitizer kernel=0 dtype=f32 n=1 stride=8 offset=3 error=0 tolerance=2.5352e-05
+PASS build=sanitizer kernel=1 dtype=f32 n=1 stride=8 offset=3 error=0 tolerance=2.2527e-05
+PASS build=sanitizer kernel=2 dtype=f32 n=1 stride=8 offset=3 error=0 tolerance=2.2527e-05
+PASS build=sanitizer kernel=0 dtype=f64 n=1 stride=8 offset=3 error=0 tolerance=2.5352e-12
+PASS build=sanitizer kernel=1 dtype=f64 n=1 stride=8 offset=3 error=0 tolerance=2.2527e-12
+PASS build=sanitizer kernel=2 dtype=f64 n=1 stride=8 offset=3 error=0 tolerance=2.2527e-12
+PASS build=sanitizer kernel=0 dtype=f32 n=3 stride=8 offset=3 error=0 tolerance=2.5352e-05
+PASS build=sanitizer kernel=1 dtype=f32 n=3 stride=8 offset=3 error=0 tolerance=2.5508e-05
+PASS build=sanitizer kernel=2 dtype=f32 n=3 stride=8 offset=3 error=0 tolerance=2.2981e-05
+PASS build=sanitizer kernel=0 dtype=f64 n=3 stride=8 offset=3 error=0 tolerance=2.5352e-12
+PASS build=sanitizer kernel=1 dtype=f64 n=3 stride=8 offset=3 error=0 tolerance=2.5508e-12
+PASS build=sanitizer kernel=2 dtype=f64 n=3 stride=8 offset=3 error=0 tolerance=2.2981e-12
+PASS build=sanitizer kernel=0 dtype=f32 n=7 stride=8 offset=3 error=0 tolerance=2.6602e-05
+PASS build=sanitizer kernel=1 dtype=f32 n=7 stride=8 offset=3 error=0 tolerance=2.8367e-05
+PASS build=sanitizer kernel=2 dtype=f32 n=7 stride=8 offset=3 error=0 tolerance=2.2981e-05
+PASS build=sanitizer kernel=0 dtype=f64 n=7 stride=8 offset=3 error=0 tolerance=2.6602e-12
+PASS build=sanitizer kernel=1 dtype=f64 n=7 stride=8 offset=3 error=0 tolerance=2.8367e-12
+PASS build=sanitizer kernel=2 dtype=f64 n=7 stride=8 offset=3 error=0 tolerance=2.2981e-12
+PASS build=sanitizer kernel=0 dtype=f32 n=8 stride=8 offset=3 error=0 tolerance=2.6602e-05
+PASS build=sanitizer kernel=1 dtype=f32 n=8 stride=8 offset=3 error=0 tolerance=2.8716e-05
+PASS build=sanitizer kernel=2 dtype=f32 n=8 stride=8 offset=3 error=0 tolerance=2.2981e-05
+PASS build=sanitizer kernel=0 dtype=f64 n=8 stride=8 offset=3 error=0 tolerance=2.6602e-12
+PASS build=sanitizer kernel=1 dtype=f64 n=8 stride=8 offset=3 error=0 tolerance=2.8716e-12
+PASS build=sanitizer kernel=2 dtype=f64 n=8 stride=8 offset=3 error=0 tolerance=2.2981e-12
+PASS build=sanitizer kernel=0 dtype=f32 n=9 stride=8 offset=3 error=0 tolerance=2.6602e-05
+PASS build=sanitizer kernel=1 dtype=f32 n=9 stride=8 offset=3 error=0 tolerance=2.9644e-05
+PASS build=sanitizer kernel=2 dtype=f32 n=9 stride=8 offset=3 error=0 tolerance=2.2981e-05
+PASS build=sanitizer kernel=0 dtype=f64 n=9 stride=8 offset=3 error=0 tolerance=2.6602e-12
+PASS build=sanitizer kernel=1 dtype=f64 n=9 stride=8 offset=3 error=0 tolerance=2.9644e-12
+PASS build=sanitizer kernel=2 dtype=f64 n=9 stride=8 offset=3 error=0 tolerance=2.2981e-12
+PASS build=sanitizer kernel=0 dtype=f32 n=17 stride=8 offset=3 error=0 tolerance=2.7422e-05
+PASS build=sanitizer kernel=1 dtype=f32 n=17 stride=8 offset=3 error=0 tolerance=4.3362e-05
+PASS build=sanitizer kernel=2 dtype=f32 n=17 stride=8 offset=3 error=0 tolerance=2.3149e-05
+PASS build=sanitizer kernel=0 dtype=f64 n=17 stride=8 offset=3 error=0 tolerance=2.7422e-12
+PASS build=sanitizer kernel=1 dtype=f64 n=17 stride=8 offset=3 error=0 tolerance=4.3362e-12
+PASS build=sanitizer kernel=2 dtype=f64 n=17 stride=8 offset=3 error=0 tolerance=2.3149e-12
+PASS build=sanitizer kernel=0 dtype=f32 n=64 stride=8 offset=3 error=0 tolerance=2.8711e-05
+PASS build=sanitizer kernel=1 dtype=f32 n=64 stride=8 offset=3 error=0 tolerance=0.00010727
+PASS build=sanitizer kernel=2 dtype=f32 n=64 stride=8 offset=3 error=0 tolerance=2.5049e-05
+PASS build=sanitizer kernel=0 dtype=f64 n=64 stride=8 offset=3 error=0 tolerance=2.8711e-12
+PASS build=sanitizer kernel=1 dtype=f64 n=64 stride=8 offset=3 error=0 tolerance=1.0727e-11
+PASS build=sanitizer kernel=2 dtype=f64 n=64 stride=8 offset=3 error=0 tolerance=2.5049e-12
+PASS build=sanitizer kernel=0 dtype=f32 n=257 stride=8 offset=3 error=0 tolerance=2.8711e-05
+PASS build=sanitizer kernel=1 dtype=f32 n=257 stride=8 offset=3 error=0 tolerance=0.00035988
+PASS build=sanitizer kernel=2 dtype=f32 n=257 stride=8 offset=3 error=0 tolerance=2.5049e-05
+PASS build=sanitizer kernel=0 dtype=f64 n=257 stride=8 offset=3 error=0 tolerance=2.8711e-12
+PASS build=sanitizer kernel=1 dtype=f64 n=257 stride=8 offset=3 error=0 tolerance=3.5988e-11
+PASS build=sanitizer kernel=2 dtype=f64 n=257 stride=8 offset=3 error=0 tolerance=2.5049e-12
+PASS build=sanitizer kernel=0 dtype=f32 n=1025 stride=8 offset=3 error=0 tolerance=2.8711e-05
+PASS build=sanitizer kernel=1 dtype=f32 n=1025 stride=8 offset=3 error=0 tolerance=0.0013693
+PASS build=sanitizer kernel=2 dtype=f32 n=1025 stride=8 offset=3 error=0 tolerance=2.5156e-05
+PASS build=sanitizer kernel=0 dtype=f64 n=1025 stride=8 offset=3 error=0 tolerance=2.8711e-12
+PASS build=sanitizer kernel=1 dtype=f64 n=1025 stride=8 offset=3 error=0 tolerance=1.3693e-10
+PASS build=sanitizer kernel=2 dtype=f64 n=1025 stride=8 offset=3 error=0 tolerance=2.5156e-12

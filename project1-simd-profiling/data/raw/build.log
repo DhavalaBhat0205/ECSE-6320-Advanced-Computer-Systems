@@ -1,0 +1,18 @@
+mkdir -p build/scalar build/reports
+mkdir -p build/auto build/reports
+mkdir -p build/avx2 build/reports
+mkdir -p build/avx512 build/reports
+gcc -std=c11 -O3 -g -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -D_POSIX_C_SOURCE=200809L -fno-math-errno -fno-trapping-math -fno-signed-zeros -fassociative-math -ffp-contract=off -march=x86-64 -mtune=generic -fno-tree-vectorize -fno-tree-slp-vectorize -fopt-info-vec-all=build/reports/scalar-vectorization.txt -c src/kernels.c -o build/scalar/kernels.o
+gcc -std=c11 -O3 -g -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -D_POSIX_C_SOURCE=200809L -fno-math-errno -fno-trapping-math -fno-signed-zeros -fassociative-math -ffp-contract=off -march=x86-64 -mtune=generic -fno-tree-vectorize -fno-tree-slp-vectorize -DBUILD_LABEL=\"scalar\" -c src/main.c -o build/scalar/main.o
+gcc -std=c11 -O3 -g -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -D_POSIX_C_SOURCE=200809L -fno-math-errno -fno-trapping-math -fno-signed-zeros -fassociative-math -ffp-contract=off -march=x86-64 -mavx512f -mfma -mtune=generic -ftree-vectorize -fopt-info-vec-all=build/reports/avx512-vectorization.txt -c src/kernels.c -o build/avx512/kernels.o
+gcc -std=c11 -O3 -g -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -D_POSIX_C_SOURCE=200809L -fno-math-errno -fno-trapping-math -fno-signed-zeros -fassociative-math -ffp-contract=off -march=x86-64 -mavx512f -mfma -mtune=generic -ftree-vectorize -DBUILD_LABEL=\"avx512\" -c src/main.c -o build/avx512/main.o
+gcc -std=c11 -O3 -g -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -D_POSIX_C_SOURCE=200809L -fno-math-errno -fno-trapping-math -fno-signed-zeros -fassociative-math -ffp-contract=off -march=x86-64 -mtune=generic -ftree-vectorize -fopt-info-vec-all=build/reports/auto-vectorization.txt -c src/kernels.c -o build/auto/kernels.o
+gcc -std=c11 -O3 -g -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -D_POSIX_C_SOURCE=200809L -fno-math-errno -fno-trapping-math -fno-signed-zeros -fassociative-math -ffp-contract=off -march=x86-64 -mtune=generic -ftree-vectorize -DBUILD_LABEL=\"auto\" -c src/main.c -o build/auto/main.o
+gcc -std=c11 -O3 -g -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -D_POSIX_C_SOURCE=200809L -fno-math-errno -fno-trapping-math -fno-signed-zeros -fassociative-math -ffp-contract=off -march=x86-64 -mavx2 -mfma -mtune=generic -ftree-vectorize -fopt-info-vec-all=build/reports/avx2-vectorization.txt -c src/kernels.c -o build/avx2/kernels.o
+gcc -std=c11 -O3 -g -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wformat=2 -D_POSIX_C_SOURCE=200809L -fno-math-errno -fno-trapping-math -fno-signed-zeros -fassociative-math -ffp-contract=off -march=x86-64 -mavx2 -mfma -mtune=generic -ftree-vectorize -DBUILD_LABEL=\"avx2\" -c src/main.c -o build/avx2/main.o
+gcc build/auto/kernels.o build/auto/main.o -o build/auto/benchmark -lm
+gcc build/scalar/kernels.o build/scalar/main.o -o build/scalar/benchmark -lm
+gcc build/avx2/kernels.o build/avx2/main.o -o build/avx2/benchmark -lm
+gcc build/avx512/kernels.o build/avx512/main.o -o build/avx512/benchmark -lm
+python3 scripts/verify_vectors.py --build-dir build --out build/reports/isa-summary.txt
+Saved disassembly summary to build/reports/isa-summary.txt

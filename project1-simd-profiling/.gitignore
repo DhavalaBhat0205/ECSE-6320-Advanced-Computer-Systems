@@ -1,0 +1,8 @@
+# Ignore portable output binaries; retain real raw and processed measurements.
+build/scalar/
+build/auto/
+build/avx2/
+build/avx512/
+__pycache__/
+*.pyc
+.DS_Store

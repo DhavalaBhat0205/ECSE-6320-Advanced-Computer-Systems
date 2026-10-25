@@ -1,0 +1,9 @@
+{
+  "backend": "native",
+  "profile": "quick",
+  "completed_configurations": 25,
+  "completed_samples": 50,
+  "repetitions": 2,
+  "requested_duration_ms": 600,
+  "event": "collection interrupted after case 24; 50 completed raw records independently parsed and preserved; no unsuccessful operations included"
+}

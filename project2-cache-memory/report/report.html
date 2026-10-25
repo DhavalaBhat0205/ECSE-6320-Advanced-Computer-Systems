@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Cache_Memory_Performance_Report</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<h1 id="cache-memory-performance-profiling">Cache &amp; Memory
+Performance Profiling</h1>
+<p><strong>ECSE 4320/6320 — Advanced Computer Systems | Project
+#2</strong></p>
+<h2 id="abstract">Abstract</h2>
+<p>This study evaluated the effects of access dependencies, working-set
+size, spatial granularity, read/write mix, memory-level parallelism, and
+transparent huge-page advice using an instrumented single-process C
+benchmark. The available host was a virtualized Intel Xeon Platinum
+8573C with a reported 48 KiB L1 data cache, 2 MiB private L2, and 260
+MiB shared L3 cache. A three-repetition matrix produced 585 retained
+samples across 195 configurations. Random single-chain pointer-chase
+time increased from 2.53 ns/access for 32 KiB to 224.02 ns/access at 512
+MiB. Eight independent pointer streams attained an aggregate 25.81
+ns/access at 512 MiB, but this is <em>throughput per completed
+access</em>, not the intrinsic latency of an individual DRAM load.
+Because the environment does not provide <code>perf</code>, cache/TLB
+counter causality is not established.</p>
+<h2 id="system-implementation-and-controls">1. System, implementation,
+and controls</h2>
+<p>GCC 14.2.0 compiled the program with <code>-O3</code>, C11, full
+warnings, and explicit <code>-fno-tree-vectorize -fno-lto</code>. The
+process uses <code>CLOCK_MONOTONIC_RAW</code>, page-aligned allocations,
+deterministic random permutations, input pre-touch and untimed warmup.
+All per-trial samples are preserved in timestamped CSV records. The CPU
+affinity visible to the environment was CPUs 0–4, but the process was
+not pinned; no frequency governor was exposed, SMT was reported
+disabled, and Linux perf was unavailable. These are not bare-metal cycle
+measurements. The Linux kernel identified itself as 6.18.55. The host
+reported a large shared cache; cache sharing and virtualization may
+influence apparent transitions.</p>
+<p>The serialized latency kernel constructs a circular permutation of
+cache-line-separated indices; the next address depends on the previous
+load. It does not issue multiple independent outstanding reads. The
+multi-chain variant exposes 1, 2, 4, 8, or 16 independent chains in a
+single thread. The bandwidth kernel uses read-only, write-only, 70%/30%,
+or 50%/50% accesses with 64-, 256-, or 1024-byte spacing in linear or
+randomized order. A touched 8-byte value can transfer a larger physical
+cache line: the reported GiB/s is consequently <strong>useful program
+bytes divided by elapsed time</strong>, not verified DDR traffic.</p>
+<h2 id="pre-experiment-hypotheses">2. Pre-experiment hypotheses</h2>
+<p><strong>Locality:</strong> a serial random dependency chain is
+expected to plateau at low latency in the smallest cache and increase
+when its active footprint crosses L1, L2, LLC, then DRAM. Transition
+footprints are not guaranteed to equal published capacities because
+cache associativity, replacement, other clients, TLB overhead, and
+pointer/array metadata affect effective capacity.</p>
+<p><strong>Access pattern:</strong> linear traversal may be prefetched,
+while a uniformly permuted chain disrupts stride prediction and creates
+real dependencies. Larger physical stride should reduce useful-byte
+utilization of transferred cache lines, but a larger stride also
+decreases the count of active elements at fixed nominal allocation
+size.</p>
+<p><strong>Concurrency and Little’s Law:</strong> one serial stream
+cannot provide much outstanding memory parallelism. Multiple independent
+streams should improve operations per second until the memory system or
+kernel overhead reaches a knee. For arrival/completion rate λ and
+average residence time W, the mean number of in-flight operations is L =
+λW. This equation does not permit inferring actual hardware MSHR
+occupancy without observing or independently estimating real memory
+residence time.</p>
+<p><strong>AMAT:</strong> a hierarchical model should approximate mean
+load latency, but miss rates and miss penalties cannot be fitted
+independently from timing-only observations. Page walks, queueing,
+inter-cache forwarding, and hardware prefetching are material
+confounders.</p>
+<p><strong>Negative case:</strong> the assumption that “64 MiB
+necessarily measures DRAM” should fail on a host reporting 260 MiB LLC.
+A direct comparison to 512 MiB should change the latency regime while
+still not proving every access reached DRAM.</p>
+<h2 id="observed-locality-transitions">3. Observed locality
+transitions</h2>
+<table>
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 40%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Nominal footprint</th>
+<th style="text-align: right;">Random serial latency (ns/access)</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>32 KiB</td>
+<td style="text-align: right;">2.53</td>
+<td>Fits in reported 48 KiB L1D nominal capacity</td>
+</tr>
+<tr class="even">
+<td>256 KiB</td>
+<td style="text-align: right;">6.65</td>
+<td>Exceeds L1; plausibly L2-resident</td>
+</tr>
+<tr class="odd">
+<td>2 MiB</td>
+<td style="text-align: right;">30.06</td>
+<td>L2 capacity boundary; replacement, TLB, and shared-cache behavior
+may contribute</td>
+</tr>
+<tr class="even">
+<td>16 MiB</td>
+<td style="text-align: right;">160.55</td>
+<td>L3-capable footprint, but effective latency far exceeds naive L3-hit
+expectations</td>
+</tr>
+<tr class="odd">
+<td>64 MiB</td>
+<td style="text-align: right;">166.10</td>
+<td>Below reported LLC capacity; cannot label DRAM-only</td>
+</tr>
+<tr class="even">
+<td>512 MiB</td>
+<td style="text-align: right;">224.02</td>
+<td>Exceeds LLC capacity; DRAM misses expected, but not directly
+counter-verified</td>
+</tr>
+</tbody>
+</table>
+<figure>
+<img src="../plots/locality_random.png"
+alt="Random pointer-chain working-set sweep" />
+<figcaption aria-hidden="true">Random pointer-chain working-set
+sweep</figcaption>
+</figure>
+<p>The step between 2 MiB and 16 MiB is larger than a simple idealized
+cache hierarchy might predict. Two falsifiable mechanisms are (1)
+greater page-walk/TLB pressure from random cache-line accesses and (2)
+cache sharing or virtualized scheduling interference. Controlled
+hardware PMU events for dTLB loads, LLC load misses, and CPU migrations
+would separate the hypotheses; those events were not accessible in this
+environment. The randomized chain and sequential chain should not be
+equated with cold-cache compulsory miss tests, because the initial
+warmup and repetitions explicitly enable cache reuse.</p>
+<h2 id="readwrite-mix-and-spatial-granularity-sensitivity">4. Read/write
+mix and spatial-granularity sensitivity</h2>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Footprint</th>
+<th style="text-align: right;">100% read</th>
+<th style="text-align: right;">70% read / 30% write</th>
+<th style="text-align: right;">50% read / 50% write</th>
+<th style="text-align: right;">100% write</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>256 KiB</td>
+<td style="text-align: right;">6.29</td>
+<td style="text-align: right;">6.40</td>
+<td style="text-align: right;">6.00</td>
+<td style="text-align: right;">5.37</td>
+</tr>
+<tr class="even">
+<td>2 MiB</td>
+<td style="text-align: right;">4.52</td>
+<td style="text-align: right;">2.44</td>
+<td style="text-align: right;">1.93</td>
+<td style="text-align: right;">4.08</td>
+</tr>
+<tr class="odd">
+<td>16 MiB</td>
+<td style="text-align: right;">2.04</td>
+<td style="text-align: right;">1.66</td>
+<td style="text-align: right;">1.77</td>
+<td style="text-align: right;">2.52</td>
+</tr>
+<tr class="even">
+<td>64 MiB</td>
+<td style="text-align: right;">0.97</td>
+<td style="text-align: right;">1.01</td>
+<td style="text-align: right;">1.14</td>
+<td style="text-align: right;">0.85</td>
+</tr>
+</tbody>
+</table>
+<p>Values are <strong>median useful GiB/s</strong>, not actual
+memory-controller bandwidth; the experiments use 64-byte stride and
+linear order. The read/write split is an <strong>operation
+ratio</strong>, not byte-accurate DRAM transaction accounting. Mixed
+operations contain a conditional branch per access and may incur dirty
+writeback or write-allocate effects. A 70/30 versus 50/50 reversal in
+the 64 MiB case is an observed non-monotonic result, not evidence of a
+universally optimal ratio. Hypothesis A: branch execution and
+store-buffer occupancy differ. Hypothesis B: virtual CPU migration,
+background interference, or dirty-cache state differs. Independent
+reruns with randomized ordering, pinned execution and PMU traffic events
+would distinguish the mechanisms.</p>
+<figure>
+<img src="../plots/read_write_mix.png"
+alt="Useful throughput by read/write ratio" />
+<figcaption aria-hidden="true">Useful throughput by read/write
+ratio</figcaption>
+</figure>
+<p>The stride sweep shows useful-throughput sensitivity to 64-, 256-,
+and 1024-byte spacing under fixed nominal allocation. Crucially, a
+larger stride <strong>decreases the visited node count</strong> for
+fixed bytes, so this is a combined test of spatial efficiency and number
+of operations; no strict causal claim about stride alone is made.
+Random-order index arrays additionally consume cache/TLB space, which
+must be included when interpreting the footprint.</p>
+<figure>
+<img src="../plots/stride_throughput.png"
+alt="Useful-byte throughput by stride" />
+<figcaption aria-hidden="true">Useful-byte throughput by
+stride</figcaption>
+</figure>
+<h2 id="independent-chain-concurrency-and-littles-law">5.
+Independent-chain concurrency and Little’s Law</h2>
+<p>At 64 MiB and 64-byte random stride, the observed medians were:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Independent chains</th>
+<th style="text-align: right;">Aggregate ns/access</th>
+<th style="text-align: right;">Useful GiB/s</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">188.48</td>
+<td style="text-align: right;">0.040</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">79.54</td>
+<td style="text-align: right;">0.094</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">39.84</td>
+<td style="text-align: right;">0.187</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">25.02</td>
+<td style="text-align: right;">0.298</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">10.83</td>
+<td style="text-align: right;">0.688</td>
+</tr>
+</tbody>
+</table>
+<p>The 16-chain configuration completed accesses at approximately 17.4
+times the rate of the one-chain configuration, although the comparisons
+represent concurrent work sharing the same core and backing chain rather
+than independently isolated DRAM channels. The aggregate time per
+completed access shrinks as operations overlap; individual load service
+latency need not change. At 512 MiB, one serial chain measured 224.02
+ns/access, while eight chains measured 25.81 aggregate ns/access (a
+roughly 8.7-fold operation-rate improvement).</p>
+<p>For an illustrative Little’s Law calculation, eight-stream 512 MiB
+execution has a completion rate of approximately 1/(25.81 ns) = 38.7
+million operations/s. If <strong>one assumed</strong> a 224.02 ns
+average residence per outstanding access, L ≈ 38.7e6/s × 224.02e-9s ≈
+8.7 in-flight accesses. This is a consistency calculation based on a
+strong assumption, <strong>not a measured MSHR count</strong>; in
+particular, concurrent accesses may change residency, hit fractions and
+latency. The observed curve does not conclusively identify a saturation
+knee before 16 chains: no plateau should be invented.</p>
+<figure>
+<img src="../plots/mlp_latency.png"
+alt="Memory-level parallelism curve" />
+<figcaption aria-hidden="true">Memory-level parallelism
+curve</figcaption>
+</figure>
+<h2 id="amat-model-and-limits">6. AMAT model and limits</h2>
+<p>A basic three-level model is:</p>
+<p><code>AMAT = t_L1 + m_L1 × (t_L2 + m_L2 × (t_L3 + m_L3 × t_DRAM))</code>.</p>
+<p>Here <code>t</code> represents incremental hit-service cost at the
+relevant level and <code>m</code> the conditional miss probability. If
+page translation is not always overlapped, an additional expected
+translation term is needed. For a single dependent load, total elapsed
+time further includes loop and dependency overhead; concurrency modifies
+queueing and perceived throughput. Because no PMU events were
+accessible, the experiment <strong>does not fit numerical miss rates or
+memory penalties</strong> from timing alone. Likewise, deriving both a
+probability and penalty from the same latency measurements would be
+underdetermined and would create unjustified precision.</p>
+<p>The program records a 4096-byte stride and compares
+<code>MADV_HUGEPAGE</code> requested versus unrequested. At 64 MiB the
+observed randomized dependent-load medians were 78.39 versus 68.84
+ns/access, respectively. This <strong>does not prove that huge pages
+were allocated</strong>: <code>madvise</code> expresses a request and
+kernel policy, not a physical page-size guarantee. To establish
+translation causality would require checking actual page backing
+(<code>smaps</code> or equivalent) and measuring dTLB walk/miss events
+under permission to collect counters.</p>
+<h2 id="negativefailure-case-analysis">7. Negative/failure-case
+analysis</h2>
+<p>The first tempting but erroneous conclusion is “64 MiB is much larger
+than L2, so its 166.10 ns latency measures DRAM.” This is unsupported on
+the present platform because the reported LLC is <strong>260
+MiB</strong>. The completed beyond-LLC test instead allocated 512 MiB
+and observed <strong>224.02 ns/access</strong>. The increase is
+consistent with DRAM participation but not a direct physical-traffic
+measurement. Alternatives include NUMA placement, changes in
+shared-cache occupancy, TLB/page-walk pressure, or VM scheduling. A
+decisive comparison would pair hardware LLC misses, memory-controller
+bytes, and page-walk counters with pinned, repeated 64/128/256/512/1024
+MiB sweeps.</p>
+<p>A second failure case is interpreting 8-byte useful-throughput as
+real DRAM bandwidth. A 64-byte cache line can be fetched or written back
+to serve one 8-byte operation; cold stores may trigger a
+read-for-ownership. A truthful physical read/write bandwidth estimate
+requires PMU memory-controller counters or a validated bandwidth
+instrument such as Intel Memory Latency Checker or STREAM in a
+controlled regime. The environment had no executable <code>perf</code>
+and no MLC, so these quantities are explicitly
+<strong>unavailable</strong>, rather than silently treated as zero.</p>
+<h2 id="limitations-anomalies-and-conclusion">8. Limitations, anomalies,
+and conclusion</h2>
+<p>The measurement campaign retained 585 timing samples across 195
+configurations. The primary locality and mix cases had three repeated
+samples each; plots show error bars where plotted. The sandbox restricts
+affinity control, frequency governance, hardware-counter access, and
+huge-page verification. The kernels have a bounded 32-bit index space
+and the random-throughput condition maintains a separate index
+permutation, so random metadata overhead is real. In multi-chain tests
+each independent cursor traverses the same logical cycle from separated
+offsets; this isolates outstanding dependency chains but not distinct
+physical channel assignments. Cache-sweep transition points, the
+apparent 2 MiB-to-16 MiB jump, and the mixed-ratio reversals must
+therefore be interpreted cautiously.</p>
+<p>The most defensible result is the consistent architectural
+distinction between serialized memory-access latency and attainable
+throughput with multiple independent accesses, combined with the
+negative finding that nominal footprint and useful program bytes do not
+establish actual DRAM behavior. The generated figures and raw records
+support those statements; actual cache misses, TLB misses,
+memory-controller bandwidth, confirmed large-page backing, and queue
+occupancy remain unmeasured.</p>
+<h2 id="ai-use-and-validation-statement">AI-use and validation
+statement</h2>
+<p>ChatGPT assisted with the C benchmark, shell runners, Python
+analysis, plotting, and report writing. The code was compiled with GCC,
+tested over 105 representative configurations, run in the available Xeon
+virtualized environment, and used to generate actual CSV tables and
+figures. Counter values, privileged configurations, and other-machine
+results were not fabricated. Any subsequent independent replication must
+preserve the hardware/software conditions as part of its own
+evidence.</p>
+</body>
+</html>

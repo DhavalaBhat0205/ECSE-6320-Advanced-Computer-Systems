@@ -1,0 +1,92 @@
+src/kernels.c:4:30: optimized: loop vectorized using 64 byte vectors
+src/kernels.c:4:30: optimized: loop vectorized using 32 byte vectors
+src/kernels.c:8:30: missed: couldn't vectorize loop
+src/kernels.c:10:25: missed: not vectorized: no vectype for stmt: _10 = *_9;
+ scalar_type: const float
+src/kernels.c:2:6: note: vectorized 1 loops in function.
+src/kernels.c:5:29: note: ***** Analysis failed with vector mode V16SF
+src/kernels.c:5:29: note: ***** The result for vector mode V64QI would be the same
+src/kernels.c:5:29: note: ***** Re-trying analysis with vector mode V32QI
+src/kernels.c:5:29: note: ***** Analysis failed with vector mode V32QI
+src/kernels.c:5:29: note: ***** Re-trying analysis with vector mode V16QI
+src/kernels.c:5:29: note: ***** Analysis failed with vector mode V16QI
+src/kernels.c:5:29: note: ***** Re-trying analysis with vector mode V8QI
+src/kernels.c:5:29: note: ***** Analysis failed with vector mode V8QI
+src/kernels.c:5:29: note: ***** Re-trying analysis with vector mode V4QI
+src/kernels.c:5:29: note: ***** Analysis failed with vector mode V4QI
+src/kernels.c:16:30: optimized: loop vectorized using 64 byte vectors
+src/kernels.c:16:30: optimized: loop vectorized using 32 byte vectors
+src/kernels.c:20:30: missed: couldn't vectorize loop
+src/kernels.c:22:25: missed: not vectorized: no vectype for stmt: _10 = *_9;
+ scalar_type: const double
+src/kernels.c:14:6: note: vectorized 1 loops in function.
+src/kernels.c:17:29: note: ***** Analysis failed with vector mode V8DF
+src/kernels.c:17:29: note: ***** The result for vector mode V64QI would be the same
+src/kernels.c:17:29: note: ***** Re-trying analysis with vector mode V32QI
+src/kernels.c:17:29: note: ***** Analysis failed with vector mode V32QI
+src/kernels.c:17:29: note: ***** Re-trying analysis with vector mode V16QI
+src/kernels.c:17:29: note: ***** Analysis failed with vector mode V16QI
+src/kernels.c:17:29: note: ***** Re-trying analysis with vector mode V8QI
+src/kernels.c:17:29: note: ***** Analysis failed with vector mode V8QI
+src/kernels.c:17:29: note: ***** Re-trying analysis with vector mode V4QI
+src/kernels.c:17:29: note: ***** Analysis failed with vector mode V4QI
+src/kernels.c:29:30: optimized: loop vectorized using 64 byte vectors
+src/kernels.c:29:30: optimized: loop vectorized using 32 byte vectors
+src/kernels.c:33:30: optimized: loop vectorized using 8 byte vectors
+src/kernels.c:26:7: note: vectorized 2 loops in function.
+src/kernels.c:30:25: note: ***** Analysis failed with vector mode V16SF
+src/kernels.c:30:25: note: ***** The result for vector mode V64QI would be the same
+src/kernels.c:30:25: note: ***** Re-trying analysis with vector mode V32QI
+src/kernels.c:30:25: note: ***** Analysis failed with vector mode V32QI
+src/kernels.c:30:25: note: ***** Re-trying analysis with vector mode V16QI
+src/kernels.c:30:25: note: ***** Analysis failed with vector mode V16QI
+src/kernels.c:30:25: note: ***** Re-trying analysis with vector mode V8QI
+src/kernels.c:30:25: note: ***** Analysis failed with vector mode V8QI
+src/kernels.c:30:25: note: ***** Re-trying analysis with vector mode V4QI
+src/kernels.c:30:25: note: ***** Analysis failed with vector mode V4QI
+src/kernels.c:43:30: optimized: loop vectorized using 64 byte vectors
+src/kernels.c:43:30: optimized: loop vectorized using 32 byte vectors
+src/kernels.c:47:30: optimized: loop vectorized using 16 byte vectors
+src/kernels.c:40:8: note: vectorized 2 loops in function.
+src/kernels.c:44:25: note: ***** Analysis failed with vector mode V8DF
+src/kernels.c:44:25: note: ***** The result for vector mode V64QI would be the same
+src/kernels.c:44:25: note: ***** Re-trying analysis with vector mode V32QI
+src/kernels.c:44:25: note: ***** Analysis failed with vector mode V32QI
+src/kernels.c:44:25: note: ***** Re-trying analysis with vector mode V16QI
+src/kernels.c:44:25: note: ***** Analysis failed with vector mode V16QI
+src/kernels.c:44:25: note: ***** Re-trying analysis with vector mode V8QI
+src/kernels.c:44:25: note: ***** Analysis failed with vector mode V8QI
+src/kernels.c:44:25: note: ***** Re-trying analysis with vector mode V4QI
+src/kernels.c:44:25: note: ***** Analysis failed with vector mode V4QI
+src/kernels.c:56:30: optimized: loop vectorized using 64 byte vectors
+src/kernels.c:56:30: optimized: loop vectorized using 32 byte vectors
+src/kernels.c:60:30: missed: couldn't vectorize loop
+src/kernels.c:62:21: missed: not vectorized: no vectype for stmt: _10 = *_9;
+ scalar_type: const float
+src/kernels.c:54:6: note: vectorized 1 loops in function.
+src/kernels.c:54:6: note: ***** Analysis failed with vector mode V16SF
+src/kernels.c:54:6: note: ***** The result for vector mode V64QI would be the same
+src/kernels.c:54:6: note: ***** Re-trying analysis with vector mode V32QI
+src/kernels.c:54:6: note: ***** Analysis failed with vector mode V32QI
+src/kernels.c:54:6: note: ***** Re-trying analysis with vector mode V16QI
+src/kernels.c:54:6: note: ***** Analysis failed with vector mode V16QI
+src/kernels.c:54:6: note: ***** Re-trying analysis with vector mode V8QI
+src/kernels.c:54:6: note: ***** Analysis failed with vector mode V8QI
+src/kernels.c:54:6: note: ***** Re-trying analysis with vector mode V4QI
+src/kernels.c:54:6: note: ***** Analysis failed with vector mode V4QI
+src/kernels.c:68:30: optimized: loop vectorized using 64 byte vectors
+src/kernels.c:68:30: optimized: loop vectorized using 32 byte vectors
+src/kernels.c:72:30: missed: couldn't vectorize loop
+src/kernels.c:74:21: missed: not vectorized: no vectype for stmt: _10 = *_9;
+ scalar_type: const double
+src/kernels.c:66:6: note: vectorized 1 loops in function.
+src/kernels.c:66:6: note: ***** Analysis failed with vector mode V8DF
+src/kernels.c:66:6: note: ***** The result for vector mode V64QI would be the same
+src/kernels.c:66:6: note: ***** Re-trying analysis with vector mode V32QI
+src/kernels.c:66:6: note: ***** Analysis failed with vector mode V32QI
+src/kernels.c:66:6: note: ***** Re-trying analysis with vector mode V16QI
+src/kernels.c:66:6: note: ***** Analysis failed with vector mode V16QI
+src/kernels.c:66:6: note: ***** Re-trying analysis with vector mode V8QI
+src/kernels.c:66:6: note: ***** Analysis failed with vector mode V8QI
+src/kernels.c:66:6: note: ***** Re-trying analysis with vector mode V4QI
+src/kernels.c:66:6: note: ***** Analysis failed with vector mode V4QI
