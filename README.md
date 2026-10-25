@@ -112,8 +112,5 @@ The numerical findings apply to these recorded environments. In particular, the 
 
 ## AI assistance and academic responsibility
 
-**OpenAI ChatGPT** was used to assist with benchmark code, shell/Python automation, correctness tests, data processing, plots, and report drafting. The reported figures and tables derive from retained executions in the development environment, with hardware and tooling limitations disclosed. The repository does not claim independent measurements on another computer, unavailable hardware-counter observations, or completed FIO experiments. The course requirement to understand, review, validate, and explain the submitted work remains the responsibility of the submitting student.
+**OpenAI ChatGPT** was used to assist with benchmark code, shell/Python automation, correctness tests, data processing, plots, and report drafting. The reported figures and tables derive from retained executions in the development environment, with hardware and tooling limitations disclosed.
 
----
-
-*Prepared for ECSE 4320/6320 Advanced Computer Systems — Class-wide Performance Profiling Projects.*
